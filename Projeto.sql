@@ -177,3 +177,35 @@ INSERT INTO cliente (nome, sexo, idade, nascimento) VALUES
 ('Alexandre Rodrigues', 'm', 32, '1991-08-14'),
 ('Débora Silva', 'f', 25, '1998-11-20'),
 ('Mauro Gomes', 'm', 34, '1989-04-11');
+
+CREATE VIEW ClienteCompras AS
+SELECT c.id, c.nome, SUM(p.valor) AS total_compras
+FROM cliente c
+JOIN venda v ON c.id = v.id_cliente
+JOIN produto p ON v.id = p.id
+GROUP BY c.id, c.nome;
+
+CREATE VIEW FuncionarioVendas AS
+SELECT f.id, f.nome, SUM(p.valor) AS total_vendas
+FROM funcionario f
+JOIN venda v ON f.id = v.id_vendedor
+JOIN produto p ON v.id = p.id
+GROUP BY f.id, f.nome;
+
+CREATE VIEW ProdutoVendas AS
+SELECT p.id, p.nome, SUM(p.valor) AS total_vendido
+FROM produto p
+JOIN venda v ON p.id = v.id
+GROUP BY p.id, p.nome;
+
+CREATE USER 'administrador'@'localhost' IDENTIFIED BY 'adm1234';
+CREATE USER 'gerente'@'localhost' IDENTIFIED BY 'ger1234';
+CREATE USER 'funcionario'@'localhost' IDENTIFIED BY 'fun1234';
+
+GRANT ALL PRIVILEGES ON BancoEDados.* TO 'administrador'@'localhost';
+
+GRANT SELECT, UPDATE, DELETE ON BancoEDados.* TO 'gerente'@'localhost';
+
+GRANT INSERT, SELECT ON BancoEDados.* TO 'funcionario'@'localhost';
+
+FLUSH PRIVILEGES;
