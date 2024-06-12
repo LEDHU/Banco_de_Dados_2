@@ -1,4 +1,4 @@
-# Database for Empresa
+# Company Database Project
 
 ## Project Overview
 
